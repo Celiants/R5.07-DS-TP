@@ -1,1 +1,8 @@
-Aucune différence détectée (première version).
+9c9
+<                 System.out.print("x");
+---
+>                 System.out.print("xXx");
+17c17
+<  11  40 305 Q6.java
+---
+>  11  40 307 Q6.java
