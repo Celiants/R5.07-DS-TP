@@ -1,0 +1,13 @@
+Nom et prénom: Antunes Célia
+
+Contenu du fichier Q3.java:
+--------------------------------
+public class Q3 {
+    public static void main(String[] args) {
+        int nombreEtoiles = Integer.parseInt(args[0]);
+        for (int i = 0; i < nombreEtoiles; i++) {
+            System.out.print("*");
+        }
+        System.out.println();
+    }
+}
