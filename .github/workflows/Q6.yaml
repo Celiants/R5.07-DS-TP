@@ -6,33 +6,37 @@ permissions:
   contents: write
 
 jobs:
-  create-and-push-archives:
+  create-and-push-q6:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Création du fichier Q6_archive_date.txt
+      - name: Création des fichiers Q6_archive_<date>.txt et Q6_différences.txt
         run: |
-          DATE=$(date '+%d-%m-%Y-%H%M%S')
-          echo "Nom et prénom: Antunes Célia" > Q6_archive_${DATE}.txt
-          echo "" >> Q6_archive_${DATE}.txt
-          echo "Contenu du fichier Q6.java:" >> Q6_archive_${DATE}.txt
-          echo "--------------------------------" >> Q6_archive_${DATE}.txt
-          cat Q6.java >> Q6_archive_${DATE}.txt
-          echo "" >> Q6_archive_${DATE}.txt
-          echo "Taille du fichier Q6.java:" >> Q6_archive_${DATE}.txt
-          wc -c -l Q6.java >> Q6_archive_${DATE}.txt
+          # Obtenir la date au format JJ-MM-AAAA-HHMMSS
+          DATE=$(date +'%d-%m-%Y-%H%M%S')
 
-      - name: Création du fichier Q6_différences.txt
-        run: |
-          DATE=$(date '+%d-%m-%Y-%H%M%S')
-          PREVIOUS_FILE=$(ls -t Q6_archive_*.txt | sed -n 2p)
-          if [ -n "$PREVIOUS_FILE" ]; then
-            diff "$PREVIOUS_FILE" "Q6_archive_${DATE}.txt" > Q6_différences.txt || true
+          # Définir les noms des fichiers
+          ARCHIVE_FILE="Q6_archive_${DATE}.txt"
+          PREVIOUS_ARCHIVE_FILE=$(ls Q6_archive_*.txt 2>/dev/null | tail -n 1)
+          DIFF_FILE="Q6_différences.txt"
+
+          # Ajouter les informations dans le fichier Q6_archive_<date>.txt
+          echo "Antunes Célia" > $ARCHIVE_FILE
+          echo "" >> $ARCHIVE_FILE
+          echo "Contenu du fichier Q6.java :" >> $ARCHIVE_FILE
+          cat Q6.java >> $ARCHIVE_FILE
+          echo "" >> $ARCHIVE_FILE
+          echo "Statistiques de Q6.java :" >> $ARCHIVE_FILE
+          wc Q6.java >> $ARCHIVE_FILE
+
+          # Comparaison avec le fichier précédent (si existant)
+          if [ -f "$PREVIOUS_ARCHIVE_FILE" ]; then
+            diff "$PREVIOUS_ARCHIVE_FILE" "$ARCHIVE_FILE" > $DIFF_FILE || true
           else
-            echo "Pas de fichier précédent pour comparer." > Q6_différences.txt
+            echo "Aucune différence détectée (première version)." > $DIFF_FILE
           fi
 
       - name: Configuration de Git
@@ -42,8 +46,6 @@ jobs:
 
       - name: Commit et push
         run: |
-          DATE=$(date '+%d-%m-%Y-%H%M%S')
-          git add Q6_archive_${DATE}.txt Q6_différences.txt
-          git commit -m "Ajout de Q6_archive_${DATE}.txt et Q6_différences.txt"
-          git pull -rebase
+          git add Q6_archive_*.txt Q6_différences.txt
+          git commit -m "Ajout des fichiers Q6_archive et Q6_différences"
           git push
