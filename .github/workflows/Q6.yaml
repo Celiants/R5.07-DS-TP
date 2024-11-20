@@ -45,4 +45,5 @@ jobs:
           DATE=$(date '+%d-%m-%Y-%H%M%S')
           git add Q6_archive_${DATE}.txt Q6_différences.txt
           git commit -m "Ajout de Q6_archive_${DATE}.txt et Q6_différences.txt"
+          git pull -rebase
           git push
