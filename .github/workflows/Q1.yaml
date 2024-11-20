@@ -18,8 +18,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.email "antunes.celia2004@gmail.com"
           git config --global user.name "Celiants"
+          git config --global user.email "antunes.celia2004@gmail.com"
           git add Q1_archive_README.md
           git commit -m "Archive README content"
           git push
