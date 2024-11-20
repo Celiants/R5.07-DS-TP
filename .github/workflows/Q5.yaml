@@ -1,0 +1,35 @@
+name: Créer Q5_archive_date.txt
+
+on: [push]
+
+permissions:
+  contents: write
+
+jobs:
+  create-and-push-archive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Création du fichier Q5_archive_date.txt
+        run: |
+          DATE=$(date '+%d-%m-%Y')
+          echo "Nom et prénom: Antunes Célia" > Q5_archive_${DATE}.txt
+          echo "" >> Q5_archive_${DATE}.txt
+          echo "Contenu du fichier Q5.java:" >> Q5_archive_${DATE}.txt
+          echo "--------------------------------" >> Q5_archive_${DATE}.txt
+          cat Q5.java >> Q5_archive_${DATE}.txt
+
+      - name: Configuration de Git
+        run: |
+          git config --global user.name "Celiants"
+          git config --global user.email "antunes.celia2004@gmail.com"
+
+      - name: Commit et push
+        run: |
+          DATE=$(date '+%d-%m-%Y')
+          git add Q5_archive_${DATE}.txt
+          git commit -m "Ajout de Q5_archive_${DATE}.txt"
+          git push
